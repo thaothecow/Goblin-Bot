@@ -6,20 +6,21 @@ import json
 import random
 #import datetime
 #from discord.ext.commands import Bot
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from replit import db
 from keep_alive import keep_alive
 
 my_secret = os.environ['TOKEN']
 my_second_secret = os.environ['rapid_key']
+my_third_secret = os.environ['NASA_KEY']
 client = discord.Client()
 load_dotenv()
 
 # barnacle = []
 # duck = []
 # jammy = []
-unique_response = []
+# unique_response = []
 
 
 if "responding" not in db.keys():
@@ -188,7 +189,7 @@ async def on_ready():
   await client.change_presence(activity=discord.Streaming(name="hugging fish", url="https://www.youtube.com/watch?v=1mHGxxWJY28"))
   print('we have logged in as {0.user}'.format(client))
   # del db["encouragements"]
-  db["unique_response"] = unique_response
+  # db["unique_response"] = unique_response
   # keys = db.keys()
   # print(keys)
   # print(keys.value)
@@ -440,10 +441,11 @@ async def on_message(message):
       #   await message.channel.send(random.choice(barnacle))
 
 # apod-----------------------------------------------------------
+  
   # $apod -> call apod
   if msg.startswith("$apod"):
     info = await apod()
-    await message.channel.send(info, file=discord.File('apod.png')) 
+    await message.channel.send(info)
 
   #---------------------------------------------------
   # Goblin backstory
@@ -472,27 +474,27 @@ async def on_message(message):
 
 async def apod():
     print('fetching apod')
-    apod_url = 'https://apod.nasa.gov/apod/'
-    apod_html = requests.get(apod_url).text
-    soup = BeautifulSoup(apod_html, 'html.parser')
-    images = soup.findAll('img')
-    for image in images:
-        response = requests.get(apod_url + image['src'])
-        if response.status_code == 200:
-            with open('apod.png', 'wb') as f:
-                f.write(response.content)
+    apod_url = 'https://api.nasa.gov/planetary/apod?api_key=' + my_third_secret
+    # apod_url = 'https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY&date=2021-12-27'
 
-    b = soup.findAll('b')
-    a = soup.findAll('a')
-    
-    important_info = []
-    important_info.append(f'**{b[0].text.strip()}** \n')
-    important_info.append(f'**{a[0].text.strip()}** \n')
-    important_info.append(f'{apod_url} \n')
-    
-    return ''.join(important_info)
+    response = requests.request("GET", apod_url)
+    json_data = response.json()
 
-#--------------------------------------------------
+    info = []
+
+    title = json_data['title'].strip()
+    info.append(f'**{title}**')
+    info.append('-')
+
+    copyright = json_data['copyright'].strip()
+    info.append(f'**{"copyright: "}**' + copyright)
+
+    explanation = json_data['explanation'].strip()
+    info.append(f'**{"explanation: "}**' + explanation)
+
+    info.append(json_data['url'])
+
+    return '\n'.join(info)
     
 keep_alive()
 

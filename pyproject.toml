@@ -11,6 +11,7 @@ replit = "^3.2.4"
 Flask = "^2.0.2"
 bs4 = "^0.0.1"
 python-dotenv = "^0.19.1"
+colorama = "^0.4.4"
 
 [tool.poetry.dev-dependencies]
 
