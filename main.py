@@ -1,12 +1,8 @@
 import os
-#import asyncio
 import discord
 import requests
 import json
 import random
-#import datetime
-#from discord.ext.commands import Bot
-# from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from replit import db
 from keep_alive import keep_alive
@@ -16,12 +12,6 @@ my_second_secret = os.environ['rapid_key']
 my_third_secret = os.environ['NASA_KEY']
 client = discord.Client()
 load_dotenv()
-
-# barnacle = []
-# duck = []
-# jammy = []
-# unique_response = []
-
 
 if "responding" not in db.keys():
   db["responding"] = True
@@ -188,11 +178,9 @@ def delete_unique_response(index):
 async def on_ready():
   await client.change_presence(activity=discord.Streaming(name="hugging fish", url="https://www.youtube.com/watch?v=1mHGxxWJY28"))
   print('we have logged in as {0.user}'.format(client))
-  # del db["encouragements"]
   # db["unique_response"] = unique_response
   # keys = db.keys()
   # print(keys)
-  # print(keys.value)
   for key in db.keys():
     print(key)
     print(db[key])
@@ -276,10 +264,6 @@ async def on_message(message):
       remarks = db["remarks"]
     one_word_per_line = '\n'.join(remarks.value)
     await message.channel.send("\n>>> {}".format(one_word_per_line))
-
-    # one_word_per_line = '\n'.join(args)
-    # quote_text = 'You said:\n>>> {}'.format(one_word_per_line)
-    # await ctx.send(quote_text)
 
   # if any remark said in "remarks", reply with random response in "responses"
   if db["responding"]:
