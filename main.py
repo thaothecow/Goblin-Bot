@@ -183,7 +183,7 @@ async def on_ready():
   # print(keys)
   for key in db.keys():
     print(key)
-    print(db[key])
+    # print(db[key])
  
 
 #-------------------------------------------------
